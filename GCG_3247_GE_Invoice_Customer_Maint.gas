@@ -1,0 +1,221 @@
+Program.Sub.ScreenSU.Start
+gui.SS_Form1..create
+gui.SS_Form1..caption("GE Invoice Customer Maintenance")
+gui.SS_Form1..size(5520,3975)
+gui.SS_Form1..position(0,0)
+gui.SS_Form1..event(unload,Unload)
+gui.SS_Form1..alwaysontop(False)
+gui.SS_Form1..fontname("Arial")
+gui.SS_Form1..fontsize(8)
+gui.SS_Form1..forecolor(0)
+gui.SS_Form1..fontstyle(,,,,)
+gui.SS_Form1..BackColor(-2147483633)
+gui.SS_Form1..controlbox(True)
+gui.SS_Form1..maxbutton(False)
+gui.SS_Form1..minbutton(False)
+gui.SS_Form1..mousepointer(0)
+gui.SS_Form1..moveable(True)
+gui.SS_Form1..sizeable(False)
+gui.SS_Form1..ShowInTaskBar(True)
+gui.SS_Form1..titlebar(True)
+gui.SS_Form1.lbl_txtCust.create(label,"Customer",True,1800,200,1,100,135,True,0,Arial,8,-2147483633,0)
+gui.SS_Form1.txtCust.create(textbox,"",True,1800,330,0,100,335,True,0,Arial,8,16777215,1)
+gui.SS_Form1.cmd_txtCust.create(button)
+gui.SS_Form1.cmd_txtCust.caption("^")
+gui.SS_Form1.cmd_txtCust.visible(True)
+gui.SS_Form1.cmd_txtCust.size(330,330)
+gui.SS_Form1.cmd_txtCust.zorder(0)
+gui.SS_Form1.cmd_txtCust.position(1985,335)
+gui.SS_Form1.cmd_txtCust.enabled(True)
+gui.SS_Form1.cmd_txtCust.fontname("Arial")
+gui.SS_Form1.cmd_txtCust.fontsize(8)
+gui.SS_Form1.cmd_txtCust.event(click,cmd_txtcust_click)
+gui.SS_Form1.lbl_txtName.create(label,"Name",True,1800,200,1,2455,135,True,0,Arial,8,-2147483633,0)
+gui.SS_Form1.txtName.create(textbox,"",True,1800,330,0,2455,335,True,0,Arial,8,16777215,1)
+gui.SS_Form1.lvwCust.create(listview)
+gui.SS_Form1.lvwCust.view(3)
+gui.SS_Form1.lvwCust.addlistviewcolumn("Customer",2470,0)
+gui.SS_Form1.lvwCust.addlistviewcolumn("Name",2470,0)
+gui.SS_Form1.lvwCust.visible(True)
+gui.SS_Form1.lvwCust.size(5055,2000)
+gui.SS_Form1.lvwCust.zorder(0)
+gui.SS_Form1.lvwCust.position(55,835)
+gui.SS_Form1.lvwCust.enabled(True)
+gui.SS_Form1.lvwCust.fontname("Arial")
+gui.SS_Form1.lvwCust.fontsize(8)
+gui.SS_Form1.lvwCust.event(itemclick,lvwcust_click)
+gui.SS_Form1.cmd_lvwCustAdd.create(button)
+gui.SS_Form1.cmd_lvwCustAdd.caption("Add")
+gui.SS_Form1.cmd_lvwCustAdd.visible(True)
+gui.SS_Form1.cmd_lvwCustAdd.size(775,330)
+gui.SS_Form1.cmd_lvwCustAdd.zorder(0)
+gui.SS_Form1.cmd_lvwCustAdd.position(4340,335)
+gui.SS_Form1.cmd_lvwCustAdd.enabled(True)
+gui.SS_Form1.cmd_lvwCustAdd.fontname("Arial")
+gui.SS_Form1.cmd_lvwCustAdd.fontsize(8)
+gui.SS_Form1.cmd_lvwCustAdd.event(click,cmd_lvwcustadd_click)
+gui.SS_Form1.cmd_lvwCustDelete.create(button)
+gui.SS_Form1.cmd_lvwCustDelete.caption("Delete")
+gui.SS_Form1.cmd_lvwCustDelete.visible(True)
+gui.SS_Form1.cmd_lvwCustDelete.size(1000,330)
+gui.SS_Form1.cmd_lvwCustDelete.zorder(0)
+gui.SS_Form1.cmd_lvwCustDelete.position(100,2920)
+gui.SS_Form1.cmd_lvwCustDelete.enabled(True)
+gui.SS_Form1.cmd_lvwCustDelete.fontname("Arial")
+gui.SS_Form1.cmd_lvwCustDelete.fontsize(8)
+gui.SS_Form1.cmd_lvwCustDelete.event(click,cmd_lvwcustdelete_click)
+gui.SS_Form1.cmd_lvwCustClear.create(button)
+gui.SS_Form1.cmd_lvwCustClear.caption("Clear")
+gui.SS_Form1.cmd_lvwCustClear.visible(True)
+gui.SS_Form1.cmd_lvwCustClear.size(1000,330)
+gui.SS_Form1.cmd_lvwCustClear.zorder(0)
+gui.SS_Form1.cmd_lvwCustClear.position(1185,2920)
+gui.SS_Form1.cmd_lvwCustClear.enabled(True)
+gui.SS_Form1.cmd_lvwCustClear.fontname("Arial")
+gui.SS_Form1.cmd_lvwCustClear.fontsize(8)
+gui.SS_Form1.cmd_lvwCustClear.event(click,cmd_lvwcustclear_click)
+
+
+Program.Sub.ScreenSU.End
+
+Program.Sub.Preflight.Start
+
+Program.Sub.Preflight.End
+
+Program.Sub.Main.Start
+
+F.ODBC.Connection!Con.OpenConnection(V.Ambient.PDSN,V.Ambient.PUser,V.Ambient.PPass)
+
+'fill screen with stored customer information
+F.ODBC.Connection!Con.OpenRecordsetRO("rstSel","select * from GCG_3247_GE_Inv_Cust order by Customer")
+	F.Intrinsic.Control.DoUntil(V.ODBC.Con!rstSel.EOF,=,True)
+		Gui.SS_Form1.lvwCust.AddListItem(V.ODBC.Con!rstSel.FieldValTrim!Customer,V.ODBC.Con!rstSel.FieldValTrim!Customer)
+		Gui.SS_Form1.lvwCust.SetListItemSubItemText(V.ODBC.Con!rstSel.FieldValTrim!Customer,1,V.ODBC.Con!rstSel.FieldValTrim!Name)
+	F.ODBC.Con!rstSel.MoveNext
+	F.Intrinsic.Control.Loop
+F.ODBC.Con!rstSel.Close
+
+Gui.SS_Form1..show
+
+Program.Sub.Main.End
+
+Program.Sub.Unload.Start
+
+f.ODBC.Connection!Con.Close
+f.Intrinsic.Control.End
+
+Program.Sub.Unload.End
+
+program.sub.cmd_txtcust_click.start
+
+V.Local.sSel.Declare(String)
+V.Local.sret.Declare(String)
+V.Local.sTitles.Declare(String)
+V.Local.iWidths.Declare(Long)
+
+F.Intrinsic.String.Split("Customer*!*Name*!*City*!*State*!*Zip*!*Country*!*Telephone*!*Location","*!*",V.Local.sTitles)
+F.Intrinsic.String.Split("1000*!*2500*!*1500*!*800*!*1000*!*1000*!*1000*!*1000","*!*",V.Local.iWidths)
+'browse for customers
+F.Intrinsic.String.Concat("select V_Customer_Master.Customer, Name_Customer, City, State, Zip, Country, Telephone, Order_Curr","",V.Local.sSel)
+F.Intrinsic.String.Concat(V.Local.sSel," from V_Customer_Master left outer join Customer_Intl on V_Customer_Master.Customer=Customer_Intl.Customer",V.Local.sSel)
+F.Intrinsic.String.Concat(V.Local.sSel," where Customer_Intl.Rec='6' order by V_Customer_Master.Customer",V.Local.sSel)
+F.Intrinsic.UI.SetBrowserHotTypeAhead(True)
+F.Intrinsic.UI.Browser("Customer","Con",V.Local.sSel,V.Local.sTitles,V.Local.iWidths,11000,8000,V.Local.sret)
+F.Intrinsic.Control.If(V.Local.sret,<>,"***CANCEL***")
+	F.Intrinsic.String.Split(V.Local.sret,"*!*",V.Local.sret)
+'put customer and name into text boxes on the screen
+	Gui.SS_Form1.txtCust.Text(V.Local.sret(0))
+	Gui.SS_Form1.txtName.Text(V.Local.sret(1))
+F.Intrinsic.Control.EndIf
+
+program.sub.cmd_txtcust_click.end
+
+program.sub.cmd_lvwcustadd_click.start
+
+V.Local.sSel.Declare(String)
+
+F.Intrinsic.String.Concat("select Customer,Name from GCG_3247_GE_Inv_Cust where Customer='",V.Screen.SS_Form1!txtCust.Text,"'",V.Local.sSel)
+F.ODBC.Connection!Con.OpenLocalRecordsetRW("rstSel",V.Local.sSel)
+'if customer no already on the table
+	F.Intrinsic.Control.If(V.ODBC.Con!rstSel.EOF,=,True)
+'add customer to the list view
+		Gui.SS_Form1.lvwCust.AddListItem(V.Screen.SS_Form1!txtCust.Text,V.Screen.SS_Form1!txtCust.Text)
+		Gui.SS_Form1.lvwCust.SetListItemSubItemText(V.Screen.SS_Form1!txtCust.Text,1,V.Screen.SS_Form1!txtName.Text)
+'add customer to the table
+		F.ODBC.Con!rstSel.AddNew
+			F.ODBC.Con!rstSel.Set!Customer(V.Screen.SS_Form1!txtCust.Text.trim)
+			F.ODBC.Con!rstSel.Set!Name(V.Screen.SS_Form1!txtName.Text.trim)
+		F.ODBC.Con!rstSel.Update
+	F.Intrinsic.Control.EndIf
+F.ODBC.Con!rstSel.Close
+'clear text boxes on the screen
+Gui.SS_Form1.txtCust.Text("")
+Gui.SS_Form1.txtName.Text("")
+
+program.sub.cmd_lvwcustadd_click.end
+
+program.sub.cmd_lvwcustdelete_click.start
+
+V.Local.sDel.Declare(String)
+'delet customer record from the table
+F.Intrinsic.String.Concat("delete from GCG_3247_GE_Inv_Cust where Customer='",V.Screen.SS_Form1!txtCust.Text,"'",V.Local.sDel)
+F.ODBC.Connection!Con.Execute(V.Local.sDel)
+'remove the record from the list view
+Gui.SS_Form1.lvwCust.RemoveItem(V.Screen.SS_Form1!txtCust.Text)
+
+'clear text boxes on the screen
+Gui.SS_Form1.txtCust.Text("")
+Gui.SS_Form1.txtName.Text("")
+
+program.sub.cmd_lvwcustdelete_click.end
+
+program.sub.cmd_lvwcustclear_click.start
+
+'clear text boxes on the screen
+Gui.SS_Form1.txtCust.Text("")
+Gui.SS_Form1.txtName.Text("")
+
+program.sub.cmd_lvwcustclear_click.end
+
+program.sub.lvwcust_click.start
+
+
+'ITEMKEY
+V.Local.sRet.Declare(String)
+V.Local.iOrd.Declare(Long)
+
+'get item ordinal
+Gui.SS_Form1.lvwCust.ListitemKeyToOrdinal(V.Args.ITEMKEY,V.Local.iOrd)
+
+'get text line
+V.Local.sRet.Set(V.Screen.SS_Form1!lvwCust.ListItemTextExtended(V.Local.iOrd))
+'split line
+F.Intrinsic.String.Split(V.Local.sRet,"*!*",V.Local.sRet)
+'put values in text boxes
+Gui.SS_Form1.txtCust.Text(V.Local.sRet(0))
+Gui.SS_Form1.txtName.Text(V.Local.sRet(1))
+
+
+
+
+
+
+
+
+
+program.sub.lvwcust_click.end
+
+Program.Sub.Comments.Start
+${$0$}$GCG_GE_Invoice_Customer_Maint$}$JCT$}$1/26/2012
+${$2$}$$}$$}$0$}$2$}$ATG_GE_Invoice.gas$}$1/26/2012 7:46:24 AM$}$
+${$3$}$0$}$$}$-1$}$-1$}$$}$1/1/1900$}$Project for Numerical Precision.
+The ATG_GE_Invoice.gas creates a custom Invoice form for specific customers.  Originally, the customers were hard coded in the GAB script.  This maintenance screen will allow them to add/remove customers that will get the custom Invoice form.
+Program.Sub.Comments.End
+Program.Sub.ScreenSS.Start
+SS_Form1{{CAPTION::GE Invoice Customer Maintenance
+SS_Form1.CTRL{{NAME::txtCust\\TYPE::2\\CAPTION::Customer\\RANGE::lvwCust\\GROUP::1\\BROWSER::1\\SIZE::1
+SS_Form1.CTRL{{NAME::txtName\\TYPE::2\\CAPTION::Name\\RANGE::lvwCust\\GROUP::1\\BROWSER::0\\SIZE::1
+SS_Form1.CTRL{{NAME::lvwCust\\TYPE::7\\GROUP::-1\\BROWSER::0\\SIZE::1
+
+Program.Sub.ScreenSS.End
+
